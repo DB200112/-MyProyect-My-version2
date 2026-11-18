@@ -20,7 +20,7 @@ ADado::ADado()
 	BlockMesh->SetStaticMesh(PlaneMesh.Get());
 	BlockMesh->SetupAttachment(DummyRoot);
 
-	// Sin física para que no se desordenen
+	// Sin fÃ­sica para que no se desordenen
 	BlockMesh->SetSimulatePhysics(false);
 	BlockMesh->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 	BlockMesh->SetCollisionResponseToAllChannels(ECR_Ignore);
@@ -48,16 +48,16 @@ void ADado::BeginPlay()
 
 void ADado::BlockClicked(UPrimitiveComponent* ClickedComp, FKey ButtonClicked)
 {
-	// --- NUEVO LOG: Avisamos qué dado se tocó ---
+	// --- NUEVO LOG: Avisamos quÃ© dado se tocÃ³ ---
 	
 	UE_LOG(LogTemp, Warning, TEXT("El dado tocado tiene el numero: %d"), Value);
 
 	if (OwningGrid != nullptr)
 	{
-		// --- NUEVO LOG: Cuántos dados hay en total ---
+		// --- NUEVO LOG: CuÃ¡ntos dados hay en total ---
 		UE_LOG(LogTemp, Warning, TEXT("Revisando la lista del Grid que tiene %d dados..."), OwningGrid->ListaDados.Num());
 
-		int32 DadosEncontrados = 0; // Variable para contar cuántos coinciden
+		int32 DadosEncontrados = 0; // Variable para contar cuÃ¡ntos coinciden
 
 		for (ADado* dadoEnLista : OwningGrid->ListaDados)
 		{
@@ -69,12 +69,12 @@ void ADado::BlockClicked(UPrimitiveComponent* ClickedComp, FKey ButtonClicked)
 		}
 
 		// --- NUEVO LOG: Resultado final ---
-		UE_LOG(LogTemp, Warning, TEXT("Se encontraron y saltaron %d dados con el número %d"), DadosEncontrados, Value);
+		UE_LOG(LogTemp, Warning, TEXT("Se encontraron y saltaron %d dados con el nÃºmero %d"), DadosEncontrados, Value);
 		UE_LOG(LogTemp, Warning, TEXT("..."));
 	}
 	else
 	{
-		UE_LOG(LogTemp, Error, TEXT("¡ERROR! El dado no tiene un Grid (OwningGrid) asignado."));
+		UE_LOG(LogTemp, Error, TEXT("Â¡ERROR! El dado no tiene un Grid (OwningGrid) asignado."));
 	}
 }
 void ADado::ApplyVerticalImpulse()
@@ -110,6 +110,7 @@ void ADado::Tick(float DeltaTime)
 			bIsJumping = false;
 
 			SetActorLocation(StartLocation);
+			Value = FMath::RandRange(1, 6); //LINEA AGREGADA PARA QUE LOS DADOS CAMBIEN ALEATORIAMENTE//
 			ladoCara();
 		}
 	}
