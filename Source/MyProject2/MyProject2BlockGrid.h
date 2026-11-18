@@ -51,6 +51,18 @@ public:
 
 	UPROPERTY(Category = Grid, EditAnywhere, BlueprintReadOnly)
 		TArray<ADado*> ListaDados;
+//NUEVO CODIGO AGREGADO FOR THIS TAREA//////////////////////////////////////////DIEGO 
+	/** El número de la suerte (1 al 6) */
+	UPROPERTY(Category = Grid, EditAnywhere, BlueprintReadOnly)
+		int32 NumeroFavorito;
+
+	/** La lista de dados que tienen el número favorito */
+	UPROPERTY(Category = Grid, EditAnywhere, BlueprintReadOnly)
+		TArray<ADado*> ListaFavoritos;
+
+	/** Texto para mostrar en pantalla el número favorito */
+	UPROPERTY(Category = Grid, VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+		class UTextRenderComponent* FavoritoText;
 
 protected:
 	// Begin AActor interface
@@ -60,6 +72,9 @@ protected:
 public:
 	/** Handle the block being clicked */
 	void AddScore(int32 PuntosASumar);
+
+	/** jugador hace clic en un dado DIEGO *////////////////////////////////////DIEGO
+	void ProcesarDadoTocado(int32 ValorDelDado);
 
 	/** Returns DummyRoot subobject **/
 	FORCEINLINE class USceneComponent* GetDummyRoot() const { return DummyRoot; }
