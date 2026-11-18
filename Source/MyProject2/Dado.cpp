@@ -51,6 +51,13 @@ void ADado::BlockClicked(UPrimitiveComponent* ClickedComp, FKey ButtonClicked)
 	// --- NUEVO LOG: Avisamos qué dado se tocó ---
 	
 	UE_LOG(LogTemp, Warning, TEXT("El dado tocado tiene el numero: %d"), Value);
+	////////////////////////////////////////////////////////////////////////////////////DIEGO//////////////////
+		// Avisamos al Grid que nos tocaron
+	if (OwningGrid != nullptr)
+	{
+		OwningGrid->ProcesarDadoTocado(this->Value);
+	}
+	///////////////////////////////////////////////////////////////////////////////////////////////
 
 	if (OwningGrid != nullptr)
 	{
