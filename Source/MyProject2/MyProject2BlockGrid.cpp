@@ -19,9 +19,17 @@ AMyProject2BlockGrid::AMyProject2BlockGrid()
 	ScoreText->SetText(FText::Format(LOCTEXT("ScoreFmt", "Puntuacion: {0}"), FText::AsNumber(0)));
 	ScoreText->SetupAttachment(DummyRoot);
 
+//TEXTO FAVORITOOOOO DIEGO//////////////////////////////////////////
+		// Crear el texto para el Número Favorito
+	FavoritoText = CreateDefaultSubobject<UTextRenderComponent>(TEXT("FavoritoText0"));
+	FavoritoText->SetRelativeLocation(FVector(200.f, 0.f, 100.f)); // Lo ponemos un poco más arriba del Score
+	FavoritoText->SetRelativeRotation(FRotator(90.f, 0.f, 0.f));
+	FavoritoText->SetText(FText::FromString(TEXT("Favorito: 0")));
+	FavoritoText->SetupAttachment(DummyRoot);
+
 	Size = 3;
 	BlockSpacing = 300.f; // Espacio entre dados
-	BlockSize = 1.8f;     // Tama�o del dado
+	BlockSize = 1.8f;     // Tamaño del dado
 }
 
 void AMyProject2BlockGrid::BeginPlay()
@@ -56,13 +64,13 @@ void AMyProject2BlockGrid::BeginPlay()
 
 		if (NewDado != nullptr)
 		{
-			// Hacemos que el n�mero sea aleatorio justo al crearlo
+			// Hacemos que el número sea aleatorio justo al crearlo
 			NewDado->Value = FMath::RandRange(1, 6);
 
 			// 1. Lo giramos
 			NewDado->ladoCara();
 
-			// 2. TRUCO DE RECENTRADO: Le ordenamos volver a su posici�n exacta en la cuadr�cula
+			// 2. TRUCO DE RECENTRADO: Le ordenamos volver a su posición exacta en la cuadrícula
 			// y movemos su malla visual al centro del hueco para que no se desparrame.
 			NewDado->SetActorLocation(BlockLocation);
 			NewDado->BlockMesh->SetRelativeLocation(FVector(-25.f, -25.f, -25.f));
@@ -70,16 +78,28 @@ void AMyProject2BlockGrid::BeginPlay()
 			NewDado->SetActorScale3D(FVector(BlockSize, BlockSize, BlockSize));
 			NewDado->OwningGrid = this;
 
-			// A�adimos el dado a la lista
+			// Añadimos el dado a la lista
 			ListaDados.Add(NewDado);
 		}
 
-		// C�digo original del bloque (mantenido y comentado)
+		// Código original del bloque (mantenido y comentado)
 		// AMyProject2Block* NewBlock = GetWorld()->SpawnActor<AMyProject2Block>(BlockLocation, FRotator(0,0,0));
 		// NewBlock->CambiarTamanio(newSize);
 	}
 
 	UE_LOG(LogTemp, Warning, TEXT("Cantidad total de dados en la lista: %d"), ListaDados.Num());
+
+	////////////////////////////////////////////////////////////////////////////////////////////DIEGO
+		// Elegimos el número favorito al azar
+	NumeroFavorito = FMath::RandRange(1, 6);
+
+	// Actualizamos el texto en pantalla
+	if (FavoritoText) {
+		FString TextoFavorito = FString::Printf(TEXT("Favorito: %d"), NumeroFavorito);
+		FavoritoText->SetText(FText::FromString(TextoFavorito));
+	}
+
+	UE_LOG(LogTemp, Warning, TEXT("El número favorito de esta partida es el: %d"), NumeroFavorito);
 }
 
 void AMyProject2BlockGrid::AddScore(int32 PuntosASumar)
@@ -87,6 +107,23 @@ void AMyProject2BlockGrid::AddScore(int32 PuntosASumar)
 	// Score++;
 	Score = Score + PuntosASumar;
 	ScoreText->SetText(FText::Format(LOCTEXT("ScoreFmt", "Puntuacion: {0}"), FText::AsNumber(Score)));
+}
+/////////////////////////////////////////////////////////////////////////////////////////////DIEGO
+void AMyProject2BlockGrid::ProcesarDadoTocado(int32 ValorDelDado)
+{
+	// Revisamos si el dado que tocaron es igual al número favorito
+	if (ValorDelDado == NumeroFavorito)
+	{
+		// Sumamos 10 puntos
+		AddScore(10); 
+
+		// Lo registramos en el log
+		UE_LOG(LogTemp, Warning, TEXT("¡Dado Favorito (%d) tocado! Sumaste 10 puntos."), ValorDelDado);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Tocaste un %d, pero tu favorito es el %d. No sumas puntos."), ValorDelDado, NumeroFavorito);
+	}
 }
 
 #undef LOCTEXT_NAMESPACE
